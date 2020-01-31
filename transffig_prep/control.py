@@ -8,7 +8,6 @@ from transffig_prep import Input
 from transffig_prep import System
 from transffig_prep import Gmap
 from transffig_prep import Msa
-from transffig_prep import Control
 
 
 class Control():
