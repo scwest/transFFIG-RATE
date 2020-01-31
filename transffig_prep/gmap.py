@@ -18,13 +18,14 @@ class Gmap():
         self.current_gene_number = 1
         
     class Gene():
-        def __init__(self, chromosome='', start=0, end=0, trans=collections.defaultdict(str), name=''):
+        def __init__(self, chromosome='', start=0, end=0, trans=collections.defaultdict(str), name='', strand=1):
             self.chromosome = chromosome
             self.start = start
             self.end = end
             self.trans = trans
             self.fa_filename = ''
             self.name = name
+            self.strand = strand
             
     class Chunk():
         def __init__(self, text):
@@ -55,13 +56,16 @@ class Gmap():
                             spots = loc[1].split('..')
                             start = int(spots[0].replace(',', ''))
                             end = int(spots[1].replace(',', ''))
+                            strand = 1
+                            if line.split('(')[-1][0] == '-':
+                                strand = -1
                         except:
                             print(line)
                             print(loc)
                             raise
-                        yield fid, chromosome, start, end
+                        yield fid, chromosome, start, end, strand
                         
-    def absorb_chunk(self, tran, chromosome, start, end):
+    def absorb_chunk(self, tran, chromosome, start, end, strand):
         '''
         New genes receive an 'arbitrary_<>' gene id.
         This is to emphasize that they are not real ids. That they may be reassigned to real
@@ -75,6 +79,8 @@ class Gmap():
         for gid, gene in self.genes.items():
             if gene.chromosome != chromosome:
                 continue
+            if gene.strand != strand:
+                continue
             if self.isoverlap(gene, start, end):
                 overlapped_gids.append(gid)
             
@@ -87,7 +93,8 @@ class Gmap():
             self.genes['arbitrary_{}'.format(self.current_gene_number)] = self.Gene(chromosome=chromosome,\
                                                                                     start=start,\
                                                                                     end=end,\
-                                                                                    trans = trans)
+                                                                                    trans = trans,
+                                                                                    strand = strand)
             self.current_gene_number += 1
         
         ### If we found 1 gene that the transcript overlaps;
@@ -106,6 +113,7 @@ class Gmap():
             gene.start = min([self.genes[x].start for x in overlapped_gids]+[start])
             gene.end = max([self.genes[x].end for x in overlapped_gids]+[end])
             gene.chromosome = self.genes[overlapped_gids[0]].chromosome # they're all the same; only [0],[1] are guaranteed
+            gene.strand = self.genes[overlapped_gids[0]].strand
             for tran, seq in [self.genes[x].trans.items() for x in overlapped_gids]:
                 gene.trans[tran] = seq
             
@@ -214,8 +222,8 @@ class Gmap():
     def parse_gmap(self, gmap_output_filename, fasta_input_filename, fasta_output_filename):
         # get all the genes
         for chunk in self.get_chunks(gmap_output_filename):
-            fid, chromosome, start, end = chunk.process()
-            self.absorb_chunk(fid, chromosome, start, end) # transcripts do not have seq here yet
+            fid, chromosome, start, end, strand = chunk.process()
+            self.absorb_chunk(fid, chromosome, start, end, strand) # transcripts do not have seq here yet
         
         # create transcript to gene dictionary
         tran2gene = collections.defaultdict(set)
