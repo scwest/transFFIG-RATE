@@ -3,14 +3,14 @@ This is the main control file. This can be called directly to run the code.
 See input.py for a list of inputs, or call this file with "-h"/"--help".
 '''
 
-from transfigg_rate import Input
-from transfigg_rate import Transcript
-from transfigg_rate import Gene
-from transfigg_rate import Distance
-from transfigg_rate import Clustering
-from transfigg_rate import Reliability
-from transfigg_rate import Trustworthiness
-from transfigg_rate import Export 
+from transffig_rate import Input
+from transffig_rate import Transcript
+from transffig_rate import Gene
+from transffig_rate import Distance
+from transffig_rate import Clustering
+from transffig_rate import Reliability
+from transffig_rate import Trustworthiness
+from transffig_rate import Export 
 
 
 class Control():

@@ -4,23 +4,23 @@ import subprocess
 import os
 
 setup(
-      name = 'transFIGG-RATE',
+      name = 'transFFIG-RATE',
       version = '0.1',
       description = 'Generation of intermediate (between gene and transcript) granules.',
       author = 'Sean West',
       url = 'tbd',
-      packages = ['transfigg_prep', 'transfigg_rate'],
+      packages = ['transffig_prep', 'transffig_rate'],
       package_data = {
                       '':['docs/*']
                       },
       entry_points = {
                       'console_scripts':[
-                                         'transfigg_rate = transfigg_rate.control:smain',
-                                         'transfigg_prep = transfigg_prep.control:smain',
-                                         'transfigg_clustalo = transfigg_prep/transfigg_clustalo.py',
-                                         'transfigg_mafft = transfigg_prep/transfigg_mafft.py',
-                                         'transfigg_muscle = transfigg_prep/transfigg_muscle.py',
-                                         'transfigg_tcoffee = transfigg_prep/transfigg_tcoffee.py',
+                                         'transffig_rate = transffig_rate.control:smain',
+                                         'transffig_prep = transffig_prep.control:smain',
+                                         'transffig_clustalo = transffig_prep/transffig_clustalo.py',
+                                         'transffig_mafft = transffig_prep/transffig_mafft.py',
+                                         'transffig_muscle = transffig_prep/transffig_muscle.py',
+                                         'transffig_tcoffee = transffig_prep/transffig_tcoffee.py',
                                          
                                          ]
                       },

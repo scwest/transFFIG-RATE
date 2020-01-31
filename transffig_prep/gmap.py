@@ -128,7 +128,7 @@ class Gmap():
     
     def command(self, gene, storage_prefix):
         commands = []
-        for call in ['transfigg_muscle', 'transfigg_mafft', 'transfigg_tcoffee', 'transfigg_clustalo']:
+        for call in ['transffig_muscle', 'transffig_mafft', 'transffig_tcoffee', 'transffig_clustalo']:
             commands.append([call, gene.fa_filename, '{}distance_matrices/{}.csv'.format(gene.name, storage_prefix)])
         
         return commands

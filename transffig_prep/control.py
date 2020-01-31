@@ -4,12 +4,11 @@ Sean West
 
 '''
 
-
-from transfigg_prep import Input
-from transfigg_prep import System
-from transfigg_prep import Gmap
-from transfigg_prep import Msa
-from transfigg_prep import Control
+from transffig_prep import Input
+from transffig_prep import System
+from transffig_prep import Gmap
+from transffig_prep import Msa
+from transffig_prep import Control
 
 
 class Control():
