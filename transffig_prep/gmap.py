@@ -170,9 +170,14 @@ class Gmap():
                 ref = line.strip().split(',')
                 ref[2] = int(ref[2])
                 ref[3] = int(ref[3])
+                ref[4] = int(ref[4])
         
         for gene_name, gene in self.genes.items():
             for rgene in ref:
+                if ref[1] != gene.chromosome:
+                    continue
+                if ref[4] != gene.strand:
+                    continue
                 if isoverlap(gene, rgene[1], rgene[2]):
                     self.genes[ref[0]] = gene
                     self.genes[ref[0]].name = ref[0]

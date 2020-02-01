@@ -17,7 +17,7 @@ setup(
                       'console_scripts':[
                                          'transffig_rate = transffig_rate.control:smain',
                                          'transffig_prep = transffig_prep.control:smain',
-                                         'transffig_clustalo = transffig_prep.transffig_clustalo:smain',
+                                         'transffig_clustalo = transffig_prep.transffig_clustalo:clustalo_main',
                                          'transffig_mafft = transffig_prep.transffig_mafft:smain',
                                          'transffig_muscle = transffig_prep.transffig_muscle:smain',
                                          'transffig_tcoffee = transffig_prep.transffig_tcoffee:smain'
