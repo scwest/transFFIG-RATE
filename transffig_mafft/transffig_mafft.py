@@ -33,13 +33,13 @@ class Transffig_mafft():
                     line = line.strip().split(' ')[0] + '\n'
                 outfile.write(line)
         
-        # run muscle
+        # run mafft        
         command = ['mafft', '--distout', temp_fasta_filename]
         with open(temp_tree_filename, 'w') as outfile:
             subprocess.call(command, stdout=outfile)
         
         # process mafft out into a distance matrix
-        with open(temp_tree_filename, 'r') as infile,\
+        with open(temp_fasta_filename+'.hat2', 'r') as infile,\
              open(distance_filename, 'w') as outfile:
             infile.readline(); infile.readline(); infile.readline()
             names = []
@@ -72,6 +72,7 @@ class Transffig_mafft():
         # remove any temporary files
         subprocess.call(['rm', temp_fasta_filename])
         subprocess.call(['rm', temp_tree_filename])
+        subprocess.call(['rm', temp_fasta_filename+'.hat2'])
         return
 
 def smain():
