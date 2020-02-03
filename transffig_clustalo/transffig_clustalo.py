@@ -51,7 +51,7 @@ class Transffig_clustalo():
         subprocess.call(['rm', temp_tree_filename])
         return
 
-def clustalo_main():
+def smain():
     stick = Transffig_clustalo()
     stick.main()
     return
