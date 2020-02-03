@@ -39,6 +39,7 @@ class Transffig_mafft():
             subprocess.call(command, stdout=outfile)
         
         # process mafft out into a distance matrix
+        dmat = collections.defaultdict(dict)
         with open(temp_fasta_filename+'.hat2', 'r') as infile,\
              open(distance_filename, 'w') as outfile:
             infile.readline(); infile.readline(); infile.readline()

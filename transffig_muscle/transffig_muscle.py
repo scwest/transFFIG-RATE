@@ -35,6 +35,7 @@ class Transffig_muscle():
         # process muscle out into a distance matrix
         tree = Phylo.read(open(temp_tree_filename), 'newick')
         
+        
         seqs = tree.get_terminals()
         dmat = collections.defaultdict(dict)
         for p1, p2 in combinations(seqs, 2):
