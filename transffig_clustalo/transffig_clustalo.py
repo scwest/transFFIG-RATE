@@ -11,7 +11,7 @@ from Bio import Phylo
 import collections
 
 class Transffig_clustalo():
-    def main():
+    def main(self):
         fasta_filename, distance_filename, unique_number = sys.argv[1:]
         
         # names of all involved temporary files (to be removed by end of script)
