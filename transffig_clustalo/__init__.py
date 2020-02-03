@@ -1,0 +1,1 @@
+from transffig_clustalo.transffig_clustalo import Transfigg_clustalo

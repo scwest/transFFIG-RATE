@@ -1,0 +1,1 @@
+from transffig_tcoffee.transffig_tcoffee import Transffig_tcoffee

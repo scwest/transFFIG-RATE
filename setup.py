@@ -17,10 +17,10 @@ setup(
                       'console_scripts':[
                                          'transffig_rate = transffig_rate.control:smain',
                                          'transffig_prep = transffig_prep.control:smain',
-                                         'transffig_clustalo = transffig_prep.transffig_clustalo:clustalo_main',
-                                         'transffig_mafft = transffig_prep.transffig_mafft:smain',
-                                         'transffig_muscle = transffig_prep.transffig_muscle:smain',
-                                         'transffig_tcoffee = transffig_prep.transffig_tcoffee:smain'
+                                         'transffig_clustalo = transffig_clustalo.transffig_clustalo:clustalo_main',
+                                         'transffig_mafft = transffig_mafft.transffig_mafft:smain',
+                                         'transffig_muscle = transffig_muscle.transffig_muscle:smain',
+                                         'transffig_tcoffee = transffig_tcoffee.transffig_tcoffee:smain'
                                          ]
                       },
       long_description = 'Generation of intermediate (between gene and transcript) granules.',

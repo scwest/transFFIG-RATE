@@ -1,0 +1,1 @@
+from transffig_mafft.transffig_mafft import Transffig_mafft
