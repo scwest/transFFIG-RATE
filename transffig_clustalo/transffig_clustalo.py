@@ -52,7 +52,6 @@ class Transffig_clustalo():
         return
 
 def clustalo_main():
-    print('TESTING')
     stick = Transffig_clustalo()
     stick.main()
     return
