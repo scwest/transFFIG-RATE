@@ -34,8 +34,9 @@ class Transffig_mafft():
                 outfile.write(line)
         
         # run muscle
-        command = ['mafft', '--distout', temp_fasta_filename, '>', temp_tree_filename]
-        subprocess.call(command)
+        command = ['mafft', '--distout', temp_fasta_filename]
+        with open(temp_tree_filename, 'w') as outfile:
+            subprocess.call(command, stdout=outfile)
         
         # process mafft out into a distance matrix
         with open(temp_tree_filename, 'r') as infile,\
