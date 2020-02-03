@@ -9,7 +9,8 @@ setup(
       description = 'Generation of intermediate (between gene and transcript) granules.',
       author = 'Sean West',
       url = 'tbd',
-      packages = ['transffig_prep', 'transffig_rate'],
+      packages = ['transffig_prep', 'transffig_rate', 'transffig_clustalo',\
+                  'transffig_mafft', 'transffig_muscle', 'transffig_tcoffee'],
       package_data = {
                       '':['docs/*']
                       },
