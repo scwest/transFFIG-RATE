@@ -9,6 +9,7 @@ import sys
 import subprocess
 from Bio import Phylo
 import collections
+from itertools import combinations
 
 class Transffig_tcoffee():
     def main(self):
