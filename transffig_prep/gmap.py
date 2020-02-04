@@ -11,6 +11,7 @@ This portion of the code handles:
 
 import os
 import collections
+import sys
 
 class Gmap():
     def __init__(self):
@@ -228,9 +229,15 @@ class Gmap():
     
     def parse_gmap(self, gmap_output_filename, fasta_input_filename, fasta_output_filename):
         # get all the genes
+        print('\tAbsorbing Chunks')
+        c = 1
         for chunk in self.get_chunks(gmap_output_filename):
+            sys.stdout.write('\r\t\tChunk: {}'.format(c))
+            sys.stdout.flush()
+            c += 1
             for tran, chromosome, start, end, strand in chunk.process():
                 self.absorb_chunk(tran, chromosome, start, end, strand)
+        print('')
         
         # create transcript to gene dictionary
         tran2gene = collections.defaultdict(set)
