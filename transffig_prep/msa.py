@@ -32,13 +32,13 @@ class Msa():
     def run_all_commands(self, commands):
         processes = {}
         process_count = 1
-        
+        FNULL = open(os.devnull, 'w')
         # initialize jobs
         for i in range(1, self.system.cores+1):
             if commands:
                 command = commands.pop()
                 print(' '.join(command))
-                processes[i] = subprocess.Popen(command+[str(i)]) # we must send unique running number
+                processes[i] = subprocess.Popen(command+[str(i)], stdout=FNULL) # we must send unique running number
                 raise Exception # testing one at a time
             
         # constantly check and make sure we are running the appropriate number of jobs
@@ -47,7 +47,7 @@ class Msa():
                 if proc.poll() != None:
                     command = commands.pop()
                     print(' '.join(command))
-                    processes[k] = subprocess.Popen(commands+[str(i)])
+                    processes[k] = subprocess.Popen(commands+[str(i)], stdout=FNULL)
             
             # keep record of unfinished commands
             self.update_command_file(commands)
