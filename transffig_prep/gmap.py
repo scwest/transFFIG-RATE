@@ -251,6 +251,7 @@ class Gmap():
                         self.genes[gene_name].name = gene_name
                         self.genes[gene_name].fa_filename = '{}/gene_fastas/{}.fa'.format(storage_prefix, gene_name)
                 else:
+                    print('Gene name: {}\tTran name: {}'.format(gene_name, tran_name))
                     self.genes[gene_name].trans[tran_name] += line
         return
     
