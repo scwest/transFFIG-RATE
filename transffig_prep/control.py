@@ -13,7 +13,8 @@ from transffig_prep import Msa
 class Control():
     def main(self):
         print('Reading Inputs')
-        inputs = Input()
+        input = Input()
+        inputs = input.args
         
         # process gmap to create a list of commands that need to be written
         # while putting all the tables for each gene in <storage_prefix/gene_fastas/{gene}.fa>
