@@ -192,6 +192,12 @@ class Gmap():
         commands = []
         fasta_output_filename = '{}.full.fa'.format(storage_prefix)
         
+        # setup output directories
+        fasta_dir = '{}gene_fastas'.format(storage_prefix)
+        subprocess.call(['mkdir', fasta_dir])
+        dm_dir = '{}distance_matrices'.format(storage_prefix)
+        subprocess.call(['mkdir', dm_dir])
+        
         # check for an existing .fa that has the gmap already processed
         if os.path.isfile(fasta_output_filename):
             self.parse_full_fa(fasta_output_filename, storage_prefix)
@@ -222,7 +228,7 @@ class Gmap():
                     if gene_name not in self.genes:
                         self.genes[gene_name] = self.Gene()
                         self.genes[gene_name].name = gene_name
-                        self.genes[gene_name].fa_filename = '{}/gene_fastas/{}.csv'.format(storage_prefix, gene_name)
+                        self.genes[gene_name].fa_filename = '{}/gene_fastas/{}.fa'.format(storage_prefix, gene_name)
                 else:
                     self.genes[gene_name].trans[tran_name] += line
         return
