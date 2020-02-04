@@ -187,7 +187,7 @@ class Gmap():
                     continue
                 if rgene[4] != gene.strand:
                     continue
-                if isoverlap(gene, rgene[2], rgene[3]):
+                if self.isoverlap(gene, rgene[2], rgene[3]):
                     self.genes[rgene[0]] = gene
                     self.genes[rgene[0]].name = rgene[0]
                     del self.genes[gene_name]
