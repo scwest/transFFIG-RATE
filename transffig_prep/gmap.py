@@ -219,14 +219,16 @@ class Gmap():
             # write the genes to their individual fa's
             print('\tWriting gene-specific fasta files.')
             for gene_name, gene in self.genes.items():
+                if len(gene.trans) < 3:
+                    continue
                 self.genes[gene_name].fa_filename = self.write_gene_fa(storage_prefix, gene)
         
         # write the commands for each gene
         i = 1
         t = len(self.genes)
         for gene in self.genes.values():
-            if len(gene.trans) < 2:
-                sys.stdout.write('\r\t\tGenes with one transcript: {} of {}'.format(i, t))
+            if len(gene.trans) < 3:
+                sys.stdout.write('\r\t\tGenes with < 3 transcripts: {} of {}'.format(i, t))
                 sys.stdout.flush()
                 i += 1
                 continue

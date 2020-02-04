@@ -37,6 +37,7 @@ class Msa():
         for i in range(1, self.system.cores+1):
             command = commands.pop()
             processes[i] = subprocess.Popen(command+[str(i)]) # we must send unique running number
+            raise Exception
             
         # constantly check and make sure we are running the appropriate number of jobs
         while commands:
