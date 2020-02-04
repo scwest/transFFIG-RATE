@@ -284,6 +284,6 @@ class Gmap():
         with open(output_filename, 'w') as outfile:
             for tran, seq in gene.trans.items():
                 outfile.write('>{} gene:{}\n'.format(tran, gene.name))
-                outfile.write('{}\n'.format(sequence))
+                outfile.write('{}\n'.format(seq))
         
         return output_filename
