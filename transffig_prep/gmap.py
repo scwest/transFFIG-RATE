@@ -63,7 +63,9 @@ class Gmap():
                             print(line)
                             print(loc)
                             raise
+                        print([fid, chromosome, start, end, strand])
                         yield fid, chromosome, start, end, strand
+            return
                         
     def absorb_chunk(self, tran, chromosome, start, end, strand):
         '''
