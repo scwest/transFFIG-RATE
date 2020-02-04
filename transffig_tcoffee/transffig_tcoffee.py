@@ -55,6 +55,8 @@ class Transffig_tcoffee():
         
         # remove any temporary files
         subprocess.call(['rm', temp_fasta_filename])
+        subprocess.call(['rm', temp_fasta_filename.replace('.fa', '.aln')])
+        subprocess.call(['rm', temp_fasta_filename.replace('.fa', 'html')])
         subprocess.call(['rm', temp_tree_filename])
         
         return
