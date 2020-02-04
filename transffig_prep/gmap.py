@@ -191,7 +191,7 @@ class Gmap():
     
     def parse(self, commands, storage_prefix, fasta_input_filename, gmap_output_filename, reference_filename):
         commands = []
-        fasta_output_filename = '{}.full.fa'.format(storage_prefix)
+        fasta_output_filename = '{}full.fa'.format(storage_prefix)
         
         # setup output directories
         fasta_dir = '{}gene_fastas'.format(storage_prefix)
