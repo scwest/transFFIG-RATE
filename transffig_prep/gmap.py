@@ -232,8 +232,8 @@ class Gmap():
                 sys.stdout.flush()
                 i += 1
                 continue
-            print(gene.name)
-            print(gene.trans)
+            #print(gene.name)
+            #print(gene.trans)
             commands += self.command(gene, storage_prefix)
         print('')
         
