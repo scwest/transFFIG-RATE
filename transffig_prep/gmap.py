@@ -229,10 +229,8 @@ class Gmap():
     def parse_gmap(self, gmap_output_filename, fasta_input_filename, fasta_output_filename):
         # get all the genes
         for chunk in self.get_chunks(gmap_output_filename):
-            cp = chunk.process()
-            print(cp)
-            fid, chromosome, start, end, strand = cp
-            self.absorb_chunk(fid, chromosome, start, end, strand) # transcripts do not have seq here yet
+            for tran, chromosome, start, end, strand in chunk.process():
+                self.absorb_chunk(tran, chromosome, start, end, strand)
         
         # create transcript to gene dictionary
         tran2gene = collections.defaultdict(set)
