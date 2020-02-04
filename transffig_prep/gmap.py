@@ -233,6 +233,7 @@ class Gmap():
                 i += 1
                 continue
             commands += self.command(gene, storage_prefix)
+        print('')
         
         return commands 
     
