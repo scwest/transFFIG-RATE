@@ -38,7 +38,7 @@ class Msa():
             if commands:
                 command = commands.pop()
                 #print(' '.join(command))
-                processes[i] = subprocess.Popen(command+[str(i)], stdout=FNULL) # we must send unique running number
+                processes[i] = subprocess.Popen(command+[str(i)], stdout=FNULL, stderr=FNULL) # we must send unique running number
                 #raise Exception # testing one at a time
             
         # constantly check and make sure we are running the appropriate number of jobs
@@ -47,7 +47,7 @@ class Msa():
                 if proc.poll() != None:
                     command = commands.pop()
                     #print(' '.join(command))
-                    processes[k] = subprocess.Popen(commands+[str(i)], stdout=FNULL)
+                    processes[k] = subprocess.Popen(commands+[str(i)], stdout=FNULL, stderr=FNULL)
             
             # keep record of unfinished commands
             self.update_command_file(commands)
