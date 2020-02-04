@@ -242,7 +242,7 @@ class Gmap():
         # create transcript to gene dictionary
         tran2gene = collections.defaultdict(set)
         for gene in self.genes:
-            for fid in self.genes.fids:
+            for fid in self.genes[gene].fids:
                 tran2gene[fid] += [gene]
         
         # write the full fasta output
