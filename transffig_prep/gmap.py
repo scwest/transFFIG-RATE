@@ -244,7 +244,8 @@ class Gmap():
             self.genes[gene_name].trans[tran_name] = seq
         else:
             gene = self.Gene(name = gene_name)
-            gene.trans[tran_name] = seq
+            t = {tran_name:seq}
+            gene.trans = t
             gene.fa_filename = '{}gene_fastas/{}.fa'.format(storage_prefix, gene_name)
             self.genes[gene_name] = gene
         print('{}\t{}'.format(len(self.genes), len(self.genes[gene_name].trans)))
