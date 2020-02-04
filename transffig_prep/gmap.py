@@ -170,25 +170,26 @@ class Gmap():
     def link_genes(self, reference_filename):
         '''
         The file must be setup as:
-        <gene name>,<chromosome>,<start>,<end>
+        <gene name>,<chromosome>,<start>,<end>,<strand>
         '''
         ref = []
         with open(reference_filename, 'r') as infile:
             for line in infile:
-                ref = line.strip().split(',')
-                ref[2] = int(ref[2])
-                ref[3] = int(ref[3])
-                ref[4] = int(ref[4])
+                seg = line.strip().split(',')
+                seg[2] = int(seg[2])
+                seg[3] = int(seg[3])
+                seg[4] = int(seg[4])
+                ref.append(seg)
         
         for gene_name, gene in self.genes.items():
             for rgene in ref:
-                if ref[1] != gene.chromosome:
+                if rgene[1] != gene.chromosome:
                     continue
-                if ref[4] != gene.strand:
+                if rgene[4] != gene.strand:
                     continue
-                if isoverlap(gene, rgene[1], rgene[2]):
-                    self.genes[ref[0]] = gene
-                    self.genes[ref[0]].name = ref[0]
+                if isoverlap(gene, rgene[2], rgene[3]):
+                    self.genes[rgene[0]] = gene
+                    self.genes[rgene[0]].name = rgene[0]
                     del self.genes[gene_name]
                     break
         return
