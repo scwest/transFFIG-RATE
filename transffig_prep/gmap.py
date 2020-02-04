@@ -239,20 +239,35 @@ class Gmap():
         
         return commands 
     
+    def add_gene(self, gene_name, tran_name, seq, storage_prefix):
+        if gene_name in self.genes:
+            self.genes[gene_name].trans[tran_name] = seq
+        else:
+            gene = self.Gene(name = gene_name)
+            gene.trans[tran_name] = seq
+            gene.fa_filename = '{}gene_fastas/{}.fa'.format(storage_prefix, gene_name)
+            self.genes[gene_name] = gene
+        return
+    
+    def one_chunk(self, chunk):
+        lines = chunk.split('\n', 1)
+        tran_name = lines[0].strip().split(' ')[0].replace('>', '')
+        gene_name = lines[0].strip().split('gene:')[-1].split(' ')[0]
+        seq = lines[1]
+        return tran_name, gene_name, seq
+    
     def parse_full_fa(self, fasta_output_filename, storage_prefix):
         with open(fasta_output_filename, 'r') as infile:
+            chunk = infile.readline()
             for line in infile:
                 if line[0] == '>':
-                    tran_name = line.strip().split(' ')[0].replace('>', '')
-                    gene_name = line.strip().split('gene:')[-1].split(' ')[0]
-                    
-                    if gene_name not in self.genes:
-                        self.genes[gene_name] = self.Gene()
-                        self.genes[gene_name].name = gene_name
-                        self.genes[gene_name].fa_filename = '{}/gene_fastas/{}.fa'.format(storage_prefix, gene_name)
+                    tran_name, gene_name, seq = self.one_chunk(chunk)
+                    self.add_gene(gene_name, tran_name, seq)
+                    chunk = line
                 else:
-                    print('Gene name: {}\tTran name: {}'.format(gene_name, tran_name))
-                    self.genes[gene_name].trans[tran_name] += line
+                    chunk += line
+            tran_name, gene_name, seq = self.one_chunk(chunk)
+            self.add_gene(gene_name, tran_name, seq)
         return
     
     def parse_gmap(self, gmap_output_filename, fasta_input_filename, fasta_output_filename):
