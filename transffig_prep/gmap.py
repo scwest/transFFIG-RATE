@@ -115,8 +115,9 @@ class Gmap():
             gene.end = max([self.genes[x].end for x in overlapped_gids]+[end])
             gene.chromosome = self.genes[overlapped_gids[0]].chromosome # they're all the same; only [0],[1] are guaranteed
             gene.strand = self.genes[overlapped_gids[0]].strand
-            for t, seq in [self.genes[x].trans.items() for x in overlapped_gids]:
-                gene.trans[t] = seq
+            for g in [self.genes[x] for x in overlapped_gids]:
+                for t, seq in g.trans.items():
+                    gene.trans[t] = seq
             
             self.genes['arbitrary_{}'.format(self.current_gene_number)] = gene
             self.current_gene_number += 1
