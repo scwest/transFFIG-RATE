@@ -63,7 +63,6 @@ class Gmap():
                             print(line)
                             print(loc)
                             raise
-                        print([fid, chromosome, start, end, strand])
                         yield fid, chromosome, start, end, strand
             return
                         
@@ -105,7 +104,7 @@ class Gmap():
             gid = overlapped_gids.pop()
             self.genes[gid].start = min([self.genes[gid].start, start])
             self.genes[gid].end = max([self.genes[gid].end, end])
-            self.genes[gid].trans.append(tran)
+            self.genes[gid].trans[tran] = ''
         
         ### If we found multiple genes that the transcript overlaps;
         ### These are either genes that are on the same genomic location
