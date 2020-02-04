@@ -207,8 +207,8 @@ class Gmap():
                 self.genes[gene_name].fa_filename = self.write_gene_fa(storage_prefix, gene)
         
         # write the commands for each gene
-        for gene_name in self.genes.values():
-            commands += self.command(self.genes[gene_name], storage_prefix)
+        for gene in self.genes.values():
+            commands += self.command(gene, storage_prefix)
         
         return commands 
     
