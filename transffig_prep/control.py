@@ -45,5 +45,3 @@ def smain():
     stick.main()
     return
 
-stick = Control()
-stick.main()
