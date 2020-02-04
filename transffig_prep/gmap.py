@@ -203,7 +203,7 @@ class Gmap():
                 self.link_genes(reference_filename)
                 
             # write the genes to their individual fa's
-            for gene_name, gene in genes.items():
+            for gene_name, gene in self.genes.items():
                 self.genes[gene_name].fa_filename = self.write_gene_fa(storage_prefix, gene)
         
         # write the commands for each gene
