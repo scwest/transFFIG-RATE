@@ -232,7 +232,7 @@ class Gmap():
                 sys.stdout.flush()
                 i += 1
                 continue
-            print(gene.name)
+            #print(gene.name)
             #print(gene.trans)
             commands += self.command(gene, storage_prefix)
         print('')
@@ -247,6 +247,7 @@ class Gmap():
             gene.trans[tran_name] = seq
             gene.fa_filename = '{}gene_fastas/{}.fa'.format(storage_prefix, gene_name)
             self.genes[gene_name] = gene
+        print('{}\t{}'.format(len(self.genes), len(self.genes[gene_name].trans)))
         return
     
     def one_chunk(self, chunk):
