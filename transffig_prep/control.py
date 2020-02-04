@@ -21,8 +21,9 @@ class Control():
         print('Checking for existing parsed GMAP output / commands.')
         gmap = Gmap()
         commands = gmap.check(inputs['storage_prefix'])
-        print('Parsing GMAP output (this will take a while).')
-        commands = gmap.parse(commands, inputs['storage_prefix'], inputs['fasta'], inputs['gmap_output'], inputs['reference'])
+        if not commands:
+            print('Parsing GMAP output (this will take a while).')
+            commands = gmap.parse(commands, inputs['storage_prefix'], inputs['fasta'], inputs['gmap_output'], inputs['reference'])
         
         # setup system constraints for running the msa jobs
         print('Setting up system constraints.')
@@ -31,8 +32,8 @@ class Control():
         # run the msa jobs
         # this will check the system to make sure it can continue to run them.
         msa = Msa(system)
-        print('Checking for previously run commands.')
-        commands = msa.check_previous(commands, inputs['storage_prefix'])
+        #print('Checking for previously run commands.')
+        #commands = msa.check_previous(commands, inputs['storage_prefix'])
         print('Running remaining commands.')
         msa.run_all_commands(commands)
         

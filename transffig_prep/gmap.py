@@ -134,7 +134,7 @@ class Gmap():
         
     def check(self, storage_prefix):
         commands = []
-        storage_filename = '{}.commands.txt'.format(storage_prefix)
+        storage_filename = '{}commands.txt'.format(storage_prefix)
         
         if os.path.isfile(storage_filename):
             with open(storage_filename, 'r') as infile:
