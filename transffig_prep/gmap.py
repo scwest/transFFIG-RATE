@@ -13,6 +13,7 @@ import os
 import collections
 import sys
 import subprocess
+from copy import deepcopy
 
 class Gmap():
     def __init__(self):
@@ -181,7 +182,12 @@ class Gmap():
                 seg[4] = int(seg[4])
                 ref.append(seg)
         
-        for gene_name, gene in self.genes.items():
+        i = 1
+        t = len(self.genes)
+        for gene_name, gene in deepcopy(self.genes).items():
+            sys.stdout.write('\r\t\tGenes:\t{} of {}'.format(i, t))
+            sys.stdout.flush()
+            i += 1
             for rgene in ref:
                 if rgene[1] != gene.chromosome:
                     continue
@@ -192,6 +198,7 @@ class Gmap():
                     self.genes[rgene[0]].name = rgene[0]
                     del self.genes[gene_name]
                     break
+        print('')
         return
     
     def parse(self, commands, storage_prefix, fasta_input_filename, gmap_output_filename, reference_filename):
