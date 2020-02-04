@@ -262,12 +262,12 @@ class Gmap():
             for line in infile:
                 if line[0] == '>':
                     tran_name, gene_name, seq = self.one_chunk(chunk)
-                    self.add_gene(gene_name, tran_name, seq)
+                    self.add_gene(gene_name, tran_name, seq, storage_prefix)
                     chunk = line
                 else:
                     chunk += line
             tran_name, gene_name, seq = self.one_chunk(chunk)
-            self.add_gene(gene_name, tran_name, seq)
+            self.add_gene(gene_name, tran_name, seq, storage_prefix)
         return
     
     def parse_gmap(self, gmap_output_filename, fasta_input_filename, fasta_output_filename):
