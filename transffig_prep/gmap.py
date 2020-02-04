@@ -216,8 +216,8 @@ class Gmap():
         with open(fasta_output_filename, 'r') as infile:
             for line in infile:
                 if line[0] == '>':
-                    tran_name = line.strip.split(' ')[0].replace('>', '')
-                    gene_name = line.strip.split('gene:')[-1].split(' ')[0]
+                    tran_name = line.strip().split(' ')[0].replace('>', '')
+                    gene_name = line.strip().split('gene:')[-1].split(' ')[0]
                     
                     if gene_name not in self.genes:
                         self.genes[gene_name] = Gene()
