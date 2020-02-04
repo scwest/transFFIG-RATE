@@ -243,7 +243,7 @@ class Gmap():
         tran2gene = collections.defaultdict(set)
         for gene_name in self.genes:
             for tran in self.genes[gene_name].trans:
-                tran2gene[tran] += [gene_name]
+                tran2gene[tran].add(gene_name)
         
         # write the full fasta output
         multiples = 0 # the number of transcripts that are mapped to multiple genes
