@@ -43,6 +43,7 @@ class Msa():
             for k, proc in processes.items():
                 if proc.poll() != None:
                     command = commands.pop()
+                    print(' '.join(command))
                     processes[k] = subprocess.Popen(commands+[str(i)])
             
             # keep record of unfinished commands

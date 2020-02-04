@@ -93,11 +93,13 @@ class Gmap():
         if len(overlapped_gids) == 0:
             t = collections.defaultdict(str)
             t[tran] = '' # NOTE: that if the gene is constructed this way, the transcripts don't have sequences
-            self.genes['arbitrary_{}'.format(self.current_gene_number)] = self.Gene(chromosome=chromosome,\
-                                                                                    start=start,\
-                                                                                    end=end,\
-                                                                                    trans = t,
-                                                                                    strand = strand)
+            gene_name = 'arbitrary_{}'.format(self.current_gene_number)
+            self.genes[gene_name] = self.Gene(chromosome=chromosome,\
+                                              start=start,\
+                                              end=end,\
+                                              trans = t,\
+                                              strand = strand,\
+                                              name=gene_name)
             self.current_gene_number += 1
         
         ### If we found 1 gene that the transcript overlaps;
@@ -121,7 +123,9 @@ class Gmap():
                 for t, seq in g.trans.items():
                     gene.trans[t] = seq
             
-            self.genes['arbitrary_{}'.format(self.current_gene_number)] = gene
+            gene_name = 'arbitrary_{}'.format(self.current_gene_number)
+            gene.name = gene_name
+            self.genes[gene_name] = gene
             self.current_gene_number += 1
             
             for i in overlapped_gids:

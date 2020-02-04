@@ -29,7 +29,7 @@ class Control():
         system = System(inputs['ram'], inputs['cores'])
         
         # run the msa jobs
-        # this will check the system to make sure it can continue to runt hem.
+        # this will check the system to make sure it can continue to run them.
         msa = Msa(system)
         print('Checking for previously run commands.')
         commands = msa.check_previous(commands, inputs['storage_prefix'])
