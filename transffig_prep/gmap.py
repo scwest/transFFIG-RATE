@@ -225,7 +225,7 @@ class Gmap():
         i = 1
         t = len(self.genes)
         for gene in self.genes.values():
-            if len(gene.tran) < 2:
+            if len(gene.trans) < 2:
                 sys.stdout.write('\r\t\tGenes with one transcript: {} of {}'.format(i, t))
                 sys.stdout.flush()
                 i += 1
