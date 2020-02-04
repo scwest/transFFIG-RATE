@@ -220,7 +220,7 @@ class Gmap():
                     gene_name = line.strip().split('gene:')[-1].split(' ')[0]
                     
                     if gene_name not in self.genes:
-                        self.genes[gene_name] = Gene()
+                        self.genes[gene_name] = self.Gene()
                         self.genes[gene_name].name = gene_name
                         self.genes[gene_name].fa_filename = '{}/gene_fastas/{}.csv'.format(storage_prefix, gene_name)
                 else:
