@@ -37,23 +37,23 @@ class Msa():
         for i in range(1, self.system.cores+1):
             if commands:
                 command = commands.pop()
-                print(' '.join(command))
+                #print(' '.join(command))
                 processes[i] = subprocess.Popen(command+[str(i)], stdout=FNULL) # we must send unique running number
-                raise Exception # testing one at a time
+                #raise Exception # testing one at a time
             
         # constantly check and make sure we are running the appropriate number of jobs
         while commands:
             for k, proc in processes.items():
                 if proc.poll() != None:
                     command = commands.pop()
-                    print(' '.join(command))
+                    #print(' '.join(command))
                     processes[k] = subprocess.Popen(commands+[str(i)], stdout=FNULL)
             
             # keep record of unfinished commands
             self.update_command_file(commands)
             
             time.sleep(30)
-            
+            print('Commands left: {}'.format(len(commands)))
             
         return
     
