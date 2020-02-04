@@ -201,15 +201,19 @@ class Gmap():
         
         # check for an existing .fa that has the gmap already processed
         if os.path.isfile(fasta_output_filename):
+            print('\tParsing Existing Commands.')
             self.parse_full_fa(fasta_output_filename, storage_prefix)
         else:
+            print('\tParsing GMAP hits (chunks)')
             self.parse_gmap(gmap_output_filename, fasta_input_filename, fasta_output_filename)
             
             # if there is a reference fasta, link the genes to their real names (referenced names)
+            print('\tLinking genes to the given reference.')
             if reference_filename:
                 self.link_genes(reference_filename)
                 
             # write the genes to their individual fa's
+            print('\tWriting gene-specific fasta files.')
             for gene_name, gene in self.genes.items():
                 self.genes[gene_name].fa_filename = self.write_gene_fa(storage_prefix, gene)
         
@@ -236,7 +240,6 @@ class Gmap():
     
     def parse_gmap(self, gmap_output_filename, fasta_input_filename, fasta_output_filename):
         # get all the genes
-        print('\tAbsorbing Chunks')
         c = 1
         for chunk in self.get_chunks(gmap_output_filename):
             sys.stdout.write('\r\t\tChunk: {}'.format(c))
