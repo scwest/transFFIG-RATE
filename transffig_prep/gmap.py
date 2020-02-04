@@ -12,6 +12,7 @@ This portion of the code handles:
 import os
 import collections
 import sys
+import subprocess
 
 class Gmap():
     def __init__(self):
