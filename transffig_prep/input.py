@@ -47,7 +47,7 @@ class Input():
             if o == '-g' or o == '--gmap_output':
                 args['gmap_output'] = a
             elif o == '-f' or o == '--fa':
-                args['fa'] = a  
+                args['fasta'] = a  
             elif o == '-s' or o == '--storage_prefix':
                 if a[-1] != '/':
                     a += '/'

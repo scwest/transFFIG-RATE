@@ -22,7 +22,7 @@ class Control():
         gmap = Gmap()
         commands = gmap.check(inputs['storage_prefix'])
         print('Parsing GMAP output (this will take a while).')
-        commands = gmap.parse(commands, inputs['storage_prefix'], inputs['fasta'], inputs['gmap'], inputs['reference'])
+        commands = gmap.parse(commands, inputs['storage_prefix'], inputs['fasta'], inputs['gmap_output'], inputs['reference'])
         
         # setup system constraints for running the msa jobs
         print('Setting up system constraints.')
