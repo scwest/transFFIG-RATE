@@ -18,12 +18,13 @@ import time
 class Msa():
     def __init__(self, system):
         self.system = system
+        self.commands_filename = ''
         
     def check_previous(self, commands, storage_prefix):
-        commands_filename = '{}commands.txt'.format(storage_prefix)
-        if os.path.isfile(commands_filename):
+        self.commands_filename = '{}commands.txt'.format(storage_prefix)
+        if os.path.isfile(self.commands_filename):
             commands = []
-            with open(commands_filename):
+            with open(self.commands_filename):
                 for line in infile:
                     commands.append(line.strip().split(' '))
         return commands
@@ -34,13 +35,26 @@ class Msa():
         
         # initialize jobs
         for i in range(1, self.system.cores+1):
-            processes[i] = subprocess.Popen(command.pop()+[str(i)]) # we must send unique running number
+            command = commands.pop()
+            processes[i] = subprocess.Popen(command+[str(i)]) # we must send unique running number
             
         # constantly check and make sure we are running the appropriate number of jobs
         while commands:
             for k, proc in processes.items():
                 if proc.poll() != None:
-                    processes[k] = subprocess.Popen(command+[str(i)])
+                    command = commands.pop()
+                    processes[k] = subprocess.Popen(commands+[str(i)])
+            
+            # keep record of unfinished commands
+            self.update_command_file(commands)
+            
             time.sleep(30)
             
+            
+        return
+    
+    def update_command_file(self, commands):
+        with open(self.commands_filename, 'w') as outfile:
+            for command in commands:
+                outfile.write(' '.join(command) +'\n')
         return
