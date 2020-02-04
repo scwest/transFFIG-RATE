@@ -32,8 +32,8 @@ class Input():
         return
     
     def parse_command_line(self):        
-        shortopts = 'g:f:s:c:r:h'
-        longopts = ['gmap_output=', 'fa=', 'storage_prefix=', 'cores=', 'ram=', 'help']
+        shortopts = 'g:f:s:c:m:r:h'
+        longopts = ['gmap_output=', 'fa=', 'storage_prefix=', 'cores=', 'ram=', 'reference=', 'help']
         
         try:
             opts, _ = getopt.getopt(sys.argv[1:], shortopts, longopts)
@@ -53,8 +53,10 @@ class Input():
                     a += '/'
                 args['storage_prefix'] = a
             elif o == '-c' or o == '--cores':
-                args['cores'] = a
+                args['cores'] = int(a)
             elif o == '-r' or o == '--ram':
+                args['reference'] = a
+            elif o == '-m' or o == '--reference':
                 args['ram'] = a
             elif o == '-h' or o == '--help':
                 self.help()
