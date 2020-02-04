@@ -222,7 +222,14 @@ class Gmap():
                 self.genes[gene_name].fa_filename = self.write_gene_fa(storage_prefix, gene)
         
         # write the commands for each gene
+        i = 1
+        t = len(self.genes)
         for gene in self.genes.values():
+            if len(gene.tran) < 2:
+                sys.stdout.write('\r\t\tGenes with one transcript: {} of {}'.format(i, t))
+                sys.stdout.flush()
+                i += 1
+                continue
             commands += self.command(gene, storage_prefix)
         
         return commands 
