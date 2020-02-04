@@ -37,6 +37,7 @@ class Msa():
         for i in range(1, self.system.cores+1):
             if commands:
                 command = commands.pop()
+                print(' '.join(command))
                 processes[i] = subprocess.Popen(command+[str(i)]) # we must send unique running number
                 raise Exception # testing one at a time
             

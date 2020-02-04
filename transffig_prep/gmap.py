@@ -145,7 +145,7 @@ class Gmap():
     def command(self, gene, storage_prefix):
         commands = []
         for call in ['transffig_muscle', 'transffig_mafft', 'transffig_tcoffee', 'transffig_clustalo']:
-            commands.append([call, gene.fa_filename, '{}distance_matrices/{}.csv'.format(gene.name, storage_prefix)])
+            commands.append([call, gene.fa_filename, '{}distance_matrices/{}.csv'.format(storage_prefix, gene_name)])
         
         return commands
     
@@ -248,7 +248,6 @@ class Gmap():
             gene.trans = t
             gene.fa_filename = '{}gene_fastas/{}.fa'.format(storage_prefix, gene_name)
             self.genes[gene_name] = gene
-        print('{}\t{}'.format(len(self.genes), len(self.genes[gene_name].trans)))
         return
     
     def one_chunk(self, chunk):
