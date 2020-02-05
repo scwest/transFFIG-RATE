@@ -194,7 +194,7 @@ class Gmap():
                 self.genes[gene_name].fa_filename = self.write_gene_fa(storage_prefix, gene)
                 
             print('\tWriting new fasta with Genes to: {}'.format(fasta_output_filename))
-            self.write_new_fasta(fasta_output_filename)
+            self.write_new_fasta(fasta_output_filename, fasta_input_filename)
             
         # write the commands for each gene
         i = 1
@@ -284,7 +284,7 @@ class Gmap():
         
         return output_filename
     
-    def write_new_fasta(self, full_fasta_filename):
+    def write_new_fasta(self, full_fasta_filename, fasta_input_filename):
         # create transcript to gene dictionary
         tran2gene = collections.defaultdict(set)
         for gene_name in self.genes:
