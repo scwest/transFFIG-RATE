@@ -299,6 +299,6 @@ class Gmap():
                 transcript = seg[0].strip().split(' ')[0].replace('>', '')
                 sequence = seg[1]
                 
-                outfile.write('>{} gene:{}\n'.format(transcript, ','.join(list(self.tran2gene[transcript]))))
+                outfile.write('>{} gene:{}\n'.format(transcript, ','.join(list(tran2gene[transcript]))))
                 outfile.write(sequence + '\n')
         return
