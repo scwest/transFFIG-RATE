@@ -20,10 +20,11 @@ class Control():
         # while putting all the tables for each gene in <storage_prefix/gene_fastas/{gene}.fa>
         print('Checking for existing parsed GMAP output / commands.')
         gmap = Gmap()
-        commands = gmap.check(inputs['storage_prefix'])
-        if not commands:
-            print('Parsing GMAP output (this will take a while).')
-            commands = gmap.parse(commands, inputs['storage_prefix'], inputs['fasta'], inputs['gmap_output'], inputs['reference'])
+        print('Parsing GMAP output (this will take a while).')
+        commands = gmap.parse(commands, inputs['storage_prefix'], inputs['fasta'], inputs['gmap_output'], inputs['reference'])
+        
+        # FOR TESTING ONLY
+        
         
         # setup system constraints for running the msa jobs
         print('Setting up system constraints.')

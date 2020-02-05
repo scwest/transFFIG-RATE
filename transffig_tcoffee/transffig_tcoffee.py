@@ -16,8 +16,8 @@ class Transffig_tcoffee():
         fasta_filename, distance_filename, unique_number = sys.argv[1:]
         
         # names of all involved temporary files (to be removed by end of script)
-        temp_fasta_filename = 'fasta_temp{}.fa'.format(unique_number)
-        temp_tree_filename = 'temp_tree{}.txt'.format(unique_number)
+        temp_fasta_filename = 'tcoffee_fasta_temp{}.fa'.format(unique_number)
+        temp_tree_filename = 'tcoffee_temp_tree{}.txt'.format(unique_number)
         
         # preprocess fasta so Phylo doesn't mess up later 
         ## (remove all but the transcript name)
@@ -41,7 +41,7 @@ class Transffig_tcoffee():
             dmat[p1.name][p2.name] = d
             dmat[p2.name][p1.name] = d
             
-        with open(distance_filename, 'w') as outfile:
+        with open(distance_filename.replace('.fa', '.tcoffee.fa'), 'w') as outfile:
             names = sorted(dmat.keys())
             outfile.write(','.join(dmat) + '\n')
             for i in names:

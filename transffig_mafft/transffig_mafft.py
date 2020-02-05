@@ -22,8 +22,8 @@ class Transffig_mafft():
         fasta_filename, distance_filename, unique_number = sys.argv[1:]
         
         # names of all involved temporary files (to be removed by end of script)
-        temp_fasta_filename = 'fasta_temp{}.fa'.format(unique_number)
-        temp_tree_filename = 'temp_tree{}.txt'.format(unique_number)
+        temp_fasta_filename = 'mafft_fasta_temp{}.fa'.format(unique_number)
+        temp_tree_filename = 'mafft_temp_tree{}.txt'.format(unique_number)
         
         # preprocess fasta so Phylo doesn't mess up later 
         ## (remove all but the transcript name)
@@ -41,7 +41,7 @@ class Transffig_mafft():
         # process mafft out into a distance matrix
         dmat = collections.defaultdict(dict)
         with open(temp_fasta_filename+'.hat2', 'r') as infile,\
-             open(distance_filename, 'w') as outfile:
+             open(distance_filename.replace('.fa', '.mafft.fa'), 'w') as outfile:
             infile.readline(); infile.readline(); infile.readline()
             names = []
             tri = []

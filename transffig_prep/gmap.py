@@ -15,61 +15,16 @@ import sys
 import subprocess
 from copy import deepcopy
 
+from transffig_prep import Gene
+from transffig_prep import Gmap_chunk
+
 class Gmap():
     def __init__(self):
         self.genes = {}
         self.current_gene_number = 1
-        
-    class Gene():
-        def __init__(self, chromosome='', start=0, end=0, trans=collections.defaultdict(str), name='', strand=1):
-            self.chromosome = chromosome
-            self.start = start
-            self.end = end
-            self.trans = trans
-            self.fa_filename = ''
-            self.name = name
-            self.strand = strand
-            
-    class Chunk():
-        def __init__(self, text):
-            self.text = text
-            
-        def get_transcript(self):
-            return self.text.split('\n')[0].split(' ')[0].replace('>', '')
-        
-        def get_sequence(self):
-            return '\n'.join(self.text.strip().split('\n')[1:])
-            
-        def process(self):
-            inpaths = False
-            fid = self.text.split('\n', 1)[0].split(' ')[0].replace('>', '')
-            for line in self.text.split('\n'):
-                if line[:5] == 'Paths':
-                    inpaths = True
-                    continue
-                elif line[:10] == 'Alignments':
-                    inpaths = False
-                    continue
-                if inpaths:
-                    if line[:6] == '  Path':
-                        try:
-                            loc = line.split(' ')[-3]
-                            loc = loc.split(':')
-                            chromosome = loc[0]
-                            spots = loc[1].split('..')
-                            start = int(spots[0].replace(',', ''))
-                            end = int(spots[1].replace(',', ''))
-                            strand = 1
-                            if line.split('(')[-1][0] == '-':
-                                strand = -1
-                        except:
-                            print(line)
-                            print(loc)
-                            raise
-                        yield fid, chromosome, start, end, strand
-            return
+        self.tran2sequence = {}
                         
-    def absorb_chunk(self, tran, chromosome, start, end, strand):
+    def absorb_hit(self, hit):
         '''
         New genes receive an 'arbitrary_<>' gene id.
         This is to emphasize that they are not real ids. That they may be reassigned to real
@@ -77,60 +32,64 @@ class Gmap():
           
         ABSORB CHUNK DOES NOT ASSIGN SEQUENCES TO TRANSCRIPTS
         '''
-        overlapped_gids = []
         
         # Check to see all the genes that overlap the genomic location of the transcript
-        for gid, gene in self.genes.items():
-            if gene.chromosome != chromosome:
-                continue
-            if gene.strand != strand:
-                continue
-            if self.isoverlap(gene, start, end):
-                overlapped_gids.append(gid)
+        overlapped_gene_names = []
+        for gene_name, gene in self.genes.items():
+            if self.isoverlap(gene, hit):
+                overlapped_gene_names.append(gene_name)
             
         # Incorporate the transcript into existing (or new) genes
         ### If there is no gene that overlaps, we'll create a new gene
         ### create a new gene at this location
-        if len(overlapped_gids) == 0:
-            t = collections.defaultdict(str)
-            t[tran] = '' # NOTE: that if the gene is constructed this way, the transcripts don't have sequences
+        if len(overlapped_gene_names) == 0:
+            # produce a new gene
             gene_name = 'arbitrary_{}'.format(self.current_gene_number)
-            self.genes[gene_name] = self.Gene(chromosome=chromosome,\
-                                              start=start,\
-                                              end=end,\
-                                              trans = t,\
-                                              strand = strand,\
-                                              name=gene_name)
             self.current_gene_number += 1
+            t = collections.defaultdict(str)
+            t[hit.name] = self.tran2sequence[hit.name]
+            gene = Gene(name = gene_name,\
+                        chromosome = hit.chromosome,\
+                        strand = hit.strand,\
+                        start = hit.start,\
+                        end = hit.end,\
+                        trans = t)
         
         ### If we found 1 gene that the transcript overlaps;
         ### add to an existing gene
-        elif len(overlapped_gids) == 1:
-            gid = overlapped_gids.pop()
-            self.genes[gid].start = min([self.genes[gid].start, start])
-            self.genes[gid].end = max([self.genes[gid].end, end])
-            self.genes[gid].trans[tran] = ''
+        elif len(overlapped_gene_names) == 1:
+            gene_name = overlapped_gene_names.pop()
+            self.genes[gene_name].start = min([self.genes[gene_name].start, hit.start])
+            self.genes[gene_name].end = max([self.genes[gene_name].end, hit.end])
+            self.genes[gene_name].trans[hit.name] = self.tran2sequence[hit.name]
         
         ### If we found multiple genes that the transcript overlaps;
         ### These are either genes that are on the same genomic location
         ### or they are the same gene. Either way, add them together.
         else:
-            gene = self.Gene()
-            gene.start = min([self.genes[x].start for x in overlapped_gids]+[start])
-            gene.end = max([self.genes[x].end for x in overlapped_gids]+[end])
-            gene.chromosome = self.genes[overlapped_gids[0]].chromosome # they're all the same; only [0],[1] are guaranteed
-            gene.strand = self.genes[overlapped_gids[0]].strand
-            for g in [self.genes[x] for x in overlapped_gids]:
+            gene = Gene()
+            gene.start = min([self.genes[x].start for x in overlapped_gene_names]+[hit.start])
+            gene.end = max([self.genes[x].end for x in overlapped_gene_names]+[hit.end])
+            gene.chromosome = hit.chromosome # they're all the same; only [0],[1] are guaranteed
+            gene.strand = hit.strand
+            
+            gene_names = [self.genes[x].name for x in overlapped_gene_names]
+            keeper_gene_names = [x for x in gene_names if 'arbitrary' not in x]
+            if keeper_gene_names:
+                gene.name = '-'.join(keeper_gene_names)
+            else:
+                gene.name = 'arbitrary_{}'.format(self.current_gene_number)
+                self.current_gene_number += 1
+            
+            for g in [self.genes[x] for x in overlapped_gene_names]:
                 for t, seq in g.trans.items():
                     gene.trans[t] = seq
+            gene.trans[hit.name] = self.tran2sequence[hit.name]
             
-            gene_name = 'arbitrary_{}'.format(self.current_gene_number)
-            gene.name = gene_name
-            self.genes[gene_name] = gene
-            self.current_gene_number += 1
+            self.genes[gene.name] = gene
             
-            for i in overlapped_gids:
-                del self.genes[i]
+            for gene_name in overlapped_gene_names:
+                del self.genes[gene_name]
         return
         
     def check(self, storage_prefix):
@@ -150,22 +109,34 @@ class Gmap():
         
         return commands
     
-    def get_chunks(self, input_filename):
+    def get_fasta_chunks(self, input_filename):
         with open(input_filename, 'r') as infile:
-            chunk = infile.readline()
+            chunk_of_text = infile.readline()
             for line in infile:
                 if line[0] == '>':
-                    yield self.Chunk(chunk) 
-                    chunk = line
+                    yield chunk_of_text
+                    chunk_of_text = line
                 else:
-                    chunk += line
-        return self.Chunk(chunk)
+                    chunk_of_text += line
+        return chunk_of_text
     
-    def isoverlap(self, gene, start, end):
-        if start > gene.start and start < gene.end:
-            return True
-        if end > gene.start and end < gene.end:
-            return True
+    def get_gmap_chunks(self, input_filename):
+        with open(input_filename, 'r') as infile:
+            chunk_of_text = infile.readline()
+            for line in infile:
+                if line[0] == '>':
+                    yield chunk_of_text
+                    chunk_of_text = line
+                else:
+                    chunk_of_text += line
+        return chunk_of_text
+    
+    def isoverlap(self, gene1, gene2):
+        if gene1.chromosome == gene2.chromosome and gene1.strand == gene2.strand:
+            if gene2.start > gene1.start and gene2.start < gene1.end:
+                return True
+            if gene2.end > gene1.start and gene2.end < gene1.end:
+                return True
         return False
     
     def link_genes(self, reference_filename):
@@ -173,32 +144,20 @@ class Gmap():
         The file must be setup as:
         <gene name>,<chromosome>,<start>,<end>,<strand>
         '''
-        ref = []
         with open(reference_filename, 'r') as infile:
+            c = 1
             for line in infile:
-                seg = line.strip().split(',')
-                seg[2] = int(seg[2])
-                seg[3] = int(seg[3])
-                seg[4] = int(seg[4])
-                ref.append(seg)
-        
-        i = 1
-        t = len(self.genes)
-        for gene_name, gene in deepcopy(self.genes).items():
-            sys.stdout.write('\r\t\tGenes:\t{} of {}'.format(i, t))
-            sys.stdout.flush()
-            i += 1
-            for rgene in ref:
-                if rgene[1] != gene.chromosome:
-                    continue
-                if rgene[4] != gene.strand:
-                    continue
-                if self.isoverlap(gene, rgene[2], rgene[3]):
-                    self.genes[rgene[0]] = gene
-                    self.genes[rgene[0]].name = rgene[0]
-                    del self.genes[gene_name]
-                    break
-        print('')
+                sys.stdout.write('\r\t\tAdding Gene:\t{}'.format(c))
+                sys.stdout.flush()
+                c += 1
+                
+                line = line.strip().split(',')
+                new_gene = Gene(name = line[0],\
+                                chromosome = line[1],\
+                                start = line[2],\
+                                end = line[3],\
+                                strand = line[4])
+            sys.stdout.write('\n')
         return
     
     def parse(self, commands, storage_prefix, fasta_input_filename, gmap_output_filename, reference_filename):
@@ -211,18 +170,21 @@ class Gmap():
         dm_dir = '{}distance_matrices'.format(storage_prefix)
         subprocess.call(['mkdir', dm_dir])
         
+        # input all transcript sequences
+        self.upload_transcript_fasta(fasta_input_filename)
+        
         # check for an existing .fa that has the gmap already processed
         if os.path.isfile(fasta_output_filename):
             print('\tParsing Existing Commands.')
-            self.parse_full_fa(fasta_output_filename, storage_prefix)
+            self.parse_existing_fa(fasta_output_filename, storage_prefix)
         else:
-            print('\tParsing GMAP hits (chunks)')
-            self.parse_gmap(gmap_output_filename, fasta_input_filename, fasta_output_filename)
-            
-            # if there is a reference fasta, link the genes to their real names (referenced names)
-            print('\tLinking genes to the given reference.')
+            print('\tAdding initial set of reference genes.')
             if reference_filename:
                 self.link_genes(reference_filename)
+            
+            
+            print('\tParsing GMAP hits (chunks)')
+            self.parse_gmap(gmap_output_filename, fasta_input_filename, fasta_output_filename)
                 
             # write the genes to their individual fa's
             print('\tWriting gene-specific fasta files.')
@@ -230,7 +192,10 @@ class Gmap():
                 if len(gene.trans) < 3:
                     continue
                 self.genes[gene_name].fa_filename = self.write_gene_fa(storage_prefix, gene)
-        
+                
+            print('\tWriting new fasta with Genes to: {}'.format(fasta_output_filename))
+            self.write_new_fasta(fasta_output_filename)
+            
         # write the commands for each gene
         i = 1
         t = len(self.genes)
@@ -247,7 +212,7 @@ class Gmap():
         
         return commands 
     
-    def add_gene(self, gene_name, tran_name, seq, storage_prefix):
+    def add_gene_and_transcript(self, gene_name, tran_name, seq, storage_prefix):
         if gene_name in self.genes:
             self.genes[gene_name].trans[tran_name] = seq
         else:
@@ -258,65 +223,55 @@ class Gmap():
             self.genes[gene_name] = gene
         return
     
-    def one_chunk(self, chunk):
+    def parse_fa_chunk(self, chunk):
         lines = chunk.split('\n', 1)
         tran_name = lines[0].strip().split(' ')[0].replace('>', '')
         gene_name = lines[0].strip().split('gene:')[-1].split(' ')[0]
         seq = lines[1]
         return tran_name, gene_name, seq
     
-    def parse_full_fa(self, fasta_output_filename, storage_prefix):
+    def parse_existing_fa(self, fasta_output_filename, storage_prefix):
         with open(fasta_output_filename, 'r') as infile:
             chunk = infile.readline()
             for line in infile:
                 if line[0] == '>':
-                    tran_name, gene_name, seq = self.one_chunk(chunk)
-                    self.add_gene(gene_name, tran_name, seq, storage_prefix)
+                    tran_name, gene_name, seq = self.parse_fa_chunk(chunk)
+                    self.add_gene_and_transcript(gene_name, tran_name, seq, storage_prefix)
                     chunk = line
                 else:
                     chunk += line
-            tran_name, gene_name, seq = self.one_chunk(chunk)
-            self.add_gene(gene_name, tran_name, seq, storage_prefix)
+            tran_name, gene_name, seq = self.parse_fa_chunk(chunk)
+            self.add_gene_and_transcript(gene_name, tran_name, seq, storage_prefix)
         return
     
     def parse_gmap(self, gmap_output_filename, fasta_input_filename, fasta_output_filename):
         # get all the genes
         c = 1
-        for chunk in self.get_chunks(gmap_output_filename):
+        for chunk_of_text in self.get_gmap_chunks(gmap_output_filename):
             sys.stdout.write('\r\t\tChunk: {}'.format(c))
             sys.stdout.flush()
             c += 1
-            for tran, chromosome, start, end, strand in chunk.process():
-                self.absorb_chunk(tran, chromosome, start, end, strand)
+            
+            chunk = Gmap_chunk(chunk_of_text)
+            chunk.process()
+            for hit in chunk.hits:
+                self.absorb_hit(hit)
         print('')
-        
-        # create transcript to gene dictionary
-        tran2gene = collections.defaultdict(set)
-        for gene_name in self.genes:
-            for tran in self.genes[gene_name].trans:
-                tran2gene[tran].add(gene_name)
-        
-        # write the full fasta output
-        multiples = 0 # the number of transcripts that are mapped to multiple genes
-        with open(fasta_output_filename, 'w') as outfile:
-            for chunk in self.get_chunks(fasta_input_filename):
-                transcript = chunk.get_transcript()
-                sequence = chunk.get_sequence()
-                gene_names = tran2gene[transcript]
-                
-                if len(gene_names) > 1:
-                    multiples += 1
-                if not gene_names:
-                    continue
                     
-                for gene_name in gene_names:
-                    if gene_name in self.genes:
-                        self.genes[gene_name].trans[transcript] = sequence
-                        break
-                
-                outfile.write('>{} gene:{}\n'.format(transcript, gene_name))
-                outfile.write(sequence + '\n')
-                    
+        return
+    
+    def upload_transcript_fasta(self, fasta_filename):
+        with open(fasta_filename, 'r') as infile:
+            transcript = infile.readline().strip().split(' ')[0].replace('>', '')
+            sequence = ''
+            for line in infile:
+                if line[0] == '>':
+                    self.tran2sequence[transcript] = sequence
+                    transcript = line.strip().split(' ')[0].replace('>', '')
+                    sequence = ''
+                else:
+                    sequence += line
+            self.tran2sequence[transcript] = sequence
         return
     
     def write_gene_fa(self, storage_prefix, gene):
@@ -328,3 +283,21 @@ class Gmap():
                 outfile.write('{}\n'.format(seq))
         
         return output_filename
+    
+    def write_new_fasta(self, full_fasta_filename):
+        # create transcript to gene dictionary
+        tran2gene = collections.defaultdict(set)
+        for gene_name in self.genes:
+            for tran in self.genes[gene_name].trans:
+                tran2gene[tran].add(gene_name)
+        
+        # write the full fasta output
+        with open(full_fasta_filename, 'w') as outfile:
+            for chunk in self.get_fasta_chunks(fasta_input_filename):
+                seg = chunk.split('\n', 1)
+                transcript = seg[0].strip().split(' ')[0].replace('>', '')
+                sequence = seg[1]
+                
+                outfile.write('>{} gene:{}\n'.format(transcript, ','.join(list(self.tran2gene[transcript]))))
+                outfile.write(sequence + '\n')
+        return
