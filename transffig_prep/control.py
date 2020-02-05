@@ -8,6 +8,7 @@ from transffig_prep import Input
 from transffig_prep import System
 from transffig_prep import Gmap
 from transffig_prep import Msa
+from transffig_prep import Report
 
 
 class Control():
@@ -24,7 +25,8 @@ class Control():
         commands = gmap.parse(commands, inputs['storage_prefix'], inputs['fasta'], inputs['gmap_output'], inputs['reference'])
         
         # FOR TESTING ONLY
-        
+        report = Report()
+        report.run(gmap.genes)
         
         # setup system constraints for running the msa jobs
         print('Setting up system constraints.')

@@ -5,7 +5,7 @@ Sean West
 import collections
 
 class Report():
-    def run(self, genes, commands):
+    def run(self, genes):
         print('Number of Genes:\t{}'.format(len(genes)))
         
         c = sum([1 for gene in genes if len(gene.trans) > 2])

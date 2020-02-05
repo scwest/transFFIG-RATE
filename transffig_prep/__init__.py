@@ -4,6 +4,7 @@ from transffig_prep.gmap_chunk import Gmap_chunk
 # Object Classes
 from transffig_prep.input import Input
 from transffig_prep.system import System
+from transffig_prep.report import Report
 
 # Independent Classes
 
