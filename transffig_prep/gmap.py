@@ -181,10 +181,14 @@ class Gmap():
             print('\tAdding initial set of reference genes.')
             if reference_filename:
                 self.link_genes(reference_filename)
+                
+            print('\tLength of self.genes:\t{}'.format(len(self.genes)))
             
             
             print('\tParsing GMAP hits (chunks)')
             self.parse_gmap(gmap_output_filename, fasta_input_filename, fasta_output_filename)
+            
+            print('\tLength of self.genes:\t{}'.format(len(self.genes)))
                 
             # write the genes to their individual fa's
             print('\tWriting gene-specific fasta files.')
@@ -193,7 +197,7 @@ class Gmap():
                     continue
                 self.genes[gene_name].fa_filename = self.write_gene_fa(storage_prefix, gene)
                 
-            print('\tWriting new fasta with Genes to: {}'.format(fasta_output_filename))
+            print('\tWriting new fasta with Genes to:\n\t\t{}'.format(fasta_output_filename))
             self.write_new_fasta(fasta_output_filename, fasta_input_filename)
             
         # write the commands for each gene
