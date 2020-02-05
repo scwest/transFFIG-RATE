@@ -160,7 +160,7 @@ class Gmap():
             sys.stdout.write('\n')
         return
     
-    def parse(self, commands, storage_prefix, fasta_input_filename, gmap_output_filename, reference_filename):
+    def parse(self, storage_prefix, fasta_input_filename, gmap_output_filename, reference_filename):
         commands = []
         fasta_output_filename = '{}full.fa'.format(storage_prefix)
         

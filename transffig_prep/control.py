@@ -22,7 +22,7 @@ class Control():
         print('Checking for existing parsed GMAP output / commands.')
         gmap = Gmap()
         print('Parsing GMAP output (this will take a while).')
-        commands = gmap.parse(commands, inputs['storage_prefix'], inputs['fasta'], inputs['gmap_output'], inputs['reference'])
+        commands = gmap.parse(inputs['storage_prefix'], inputs['fasta'], inputs['gmap_output'], inputs['reference'])
         
         # FOR TESTING ONLY
         report = Report()
