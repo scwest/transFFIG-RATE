@@ -13,7 +13,7 @@ class Report():
         
         tran2genes = collections.defaultdict(set)
         for gene_name in genes:
-            for tran in gene.trans:
+            for tran in genes[gene_name].trans:
                 tran2genes[tran].add(gene_name)
         print('Number of Transcripts:\t{}'.format(len(tran2genes)))
         print('Number of Transcripts with > 1 gene:\t{}'.format(len([x for x in tran2genes if len(tran2genes[x]) > 1]))) 
