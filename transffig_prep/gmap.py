@@ -227,6 +227,7 @@ class Gmap():
         lines = chunk.split('\n', 1)
         tran_name = lines[0].strip().split(' ')[0].replace('>', '')
         gene_name = lines[0].strip().split('gene:')[-1].split(' ')[0]
+        print(lines)
         seq = lines[1]
         return tran_name, gene_name, seq
     
