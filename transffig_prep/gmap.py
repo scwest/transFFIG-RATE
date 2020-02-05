@@ -54,6 +54,7 @@ class Gmap():
                         start = hit.start,\
                         end = hit.end,\
                         trans = t)
+            self.genes[gene.name] = gene
         
         ### If we found 1 gene that the transcript overlaps;
         ### add to an existing gene
@@ -157,6 +158,7 @@ class Gmap():
                                 start = line[2],\
                                 end = line[3],\
                                 strand = line[4])
+                self.genes[new_gene.name] = new_gene
             sys.stdout.write('\n')
         return
     
