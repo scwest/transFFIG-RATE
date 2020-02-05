@@ -49,12 +49,12 @@ class Gmap_chunk():
                         print(loc)
                         raise
             
-                hit = self.Hit()
-                hit.name = fid
-                hit.chromosome = chromosome
-                hit.start = start
-                hit.end = end
-                hit.strand = strand
-                self.hits.append(hit)
+                    hit = self.Hit()
+                    hit.name = fid
+                    hit.chromosome = chromosome
+                    hit.start = start
+                    hit.end = end
+                    hit.strand = strand
+                    self.hits.append(hit)
         return
                 
