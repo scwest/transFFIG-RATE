@@ -70,7 +70,7 @@ class Gmap():
         else:
             # for now, transcripts that overlap with reference genes will be represented
             #          and those that do not overlap with reference genes at all
-            keeper_gene_names = [x for x in gene_names if 'arbitrary' not in x]
+            keeper_gene_names = [x for x in overlapped_gene_names if 'arbitrary' not in x]
             for gene_name in keeper_gene_names:
                 self.genes[gene_name].start = min([self.genes[gene_name].start, hit.start])
                 self.genes[gene_name].end = max([self.genes[gene_name].end, hit.end])
@@ -90,8 +90,8 @@ class Gmap():
                 gene.chromosome = hit.chromosome # they're all the same; only [0],[1] are guaranteed
                 gene.strand = hit.strand
                 
-                gene_names = [self.genes[x].name for x in overlapped_gene_names]
-                keeper_gene_names = [x for x in gene_names if 'arbitrary' not in x]
+                #gene_names = [self.genes[x].name for x in overlapped_gene_names]
+                keeper_gene_names = [x for x in overlapped_gene_names if 'arbitrary' not in x]
                 if keeper_gene_names:
                     gene.name = '-'.join(keeper_gene_names)
                 else:
