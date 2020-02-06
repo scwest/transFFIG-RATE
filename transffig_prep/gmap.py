@@ -158,7 +158,8 @@ class Gmap():
                                 start = line[2],\
                                 end = line[3],\
                                 strand = line[4])
-                self.genes[new_gene.name] = new_gene
+                self.genes[new_gene.name] = deepcopy(new_gene)
+                self.genes[new_gene.name].trans = collections.defaultdict(str)
             sys.stdout.write('\n')
         return
     

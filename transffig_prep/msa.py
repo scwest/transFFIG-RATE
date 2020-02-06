@@ -55,9 +55,9 @@ class Msa():
             time.sleep(30)
             print('Commands left: {}'.format(len(commands)))
             
-            # keep the wd clean:
-            subprocess.call(['rm', 'fasta_temp*'])
-            subprocess.call(['rm', 'tree_temp*'])
+        # keep the wd clean:
+        subprocess.call(['rm', '*fasta_temp*'])
+        subprocess.call(['rm', '*tree_temp*'])
             
         return
     
