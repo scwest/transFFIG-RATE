@@ -314,7 +314,7 @@ class Gmap():
         with open(output_filename, 'w') as outfile:
             for tran in transcripts_to_write:
                 outfile.write('>{} gene:{}\n'.format(tran, gene.name))
-                outfile.write('{}\n'.format(gene.trans[tran]))
+                outfile.write('{}'.format(gene.trans[tran]))
         
         return output_filename
     
