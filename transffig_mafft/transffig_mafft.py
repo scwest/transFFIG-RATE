@@ -78,6 +78,9 @@ class Transffig_mafft():
 
 def smain():
     stick = Transffig_mafft()
-    stick.main()
+    try:
+        stick.main()
+    except:
+        print('Errors in transffig_mafft.')
     return
 

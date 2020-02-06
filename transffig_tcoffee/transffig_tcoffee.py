@@ -63,7 +63,10 @@ class Transffig_tcoffee():
     
 def smain():
     stick = Transffig_tcoffee()
-    stick.main()
+    try:
+        stick.main()
+    except:
+        print('Errors in transffig_tcoffee')
 
 
 

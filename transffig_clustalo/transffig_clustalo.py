@@ -53,7 +53,10 @@ class Transffig_clustalo():
 
 def smain():
     stick = Transffig_clustalo()
-    stick.main()
+    try:
+        stick.main()
+    except:
+        print('Errors in transffig_clustalo.')
     return
 
 

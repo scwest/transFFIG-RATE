@@ -67,6 +67,9 @@ class Transffig_muscle():
     
 def smain():
     stick = Transffig_muscle()
-    stick.main()
+    try:
+        stick.main()
+    except:
+        print('Errors in transffig_muscle.')
     return
 
