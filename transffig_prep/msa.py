@@ -52,7 +52,7 @@ class Msa():
             # keep record of unfinished commands
             self.update_command_file(commands)
             
-            time.sleep(30)
+            time.sleep(10)
             print('Commands left: {}'.format(len(commands)))
             
         # keep the wd clean:
