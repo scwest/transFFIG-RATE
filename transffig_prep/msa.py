@@ -24,7 +24,7 @@ class Msa():
         self.commands_filename = '{}commands.txt'.format(storage_prefix)
         if os.path.isfile(self.commands_filename):
             commands = []
-            with open(self.commands_filename):
+            with open(self.commands_filename, 'r') as infile:
                 for line in infile:
                     commands.append(line.strip().split(' '))
         return commands
