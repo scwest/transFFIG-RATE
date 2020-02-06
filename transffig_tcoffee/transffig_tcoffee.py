@@ -41,7 +41,7 @@ class Transffig_tcoffee():
             dmat[p1.name][p2.name] = d
             dmat[p2.name][p1.name] = d
             
-        with open(distance_filename.replace('.fa', '.tcoffee.fa'), 'w') as outfile:
+        with open(distance_filename.replace('.csv', '.tcoffee.csv'), 'w') as outfile:
             names = sorted(dmat.keys())
             outfile.write(','.join(dmat) + '\n')
             for i in names:

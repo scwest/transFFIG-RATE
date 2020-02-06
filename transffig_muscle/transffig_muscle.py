@@ -44,7 +44,7 @@ class Transffig_muscle():
             dmat[p1.name][p2.name] = d
             dmat[p2.name][p1.name] = d
             
-        with open(distance_filename.replace('.fa', '.muscle.fa'), 'w') as outfile:
+        with open(distance_filename.replace('.csv', '.muscle.csv'), 'w') as outfile:
             names = sorted(dmat.keys())
             outfile.write(','.join(dmat) + '\n')
             for i in names:

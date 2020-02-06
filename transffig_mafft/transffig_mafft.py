@@ -41,7 +41,7 @@ class Transffig_mafft():
         # process mafft out into a distance matrix
         dmat = collections.defaultdict(dict)
         with open(temp_fasta_filename+'.hat2', 'r') as infile,\
-             open(distance_filename.replace('.fa', '.mafft.fa'), 'w') as outfile:
+             open(distance_filename.replace('.csv', '.mafft.csv'), 'w') as outfile:
             infile.readline(); infile.readline(); infile.readline()
             names = []
             tri = []

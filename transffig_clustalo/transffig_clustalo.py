@@ -33,7 +33,7 @@ class Transffig_clustalo():
         
         # process clustal omega out into a distance matrix
         with open(temp_tree_filename, 'r') as infile, \
-             open(distance_filename.replace('.fa', '.clustalo.fa'), 'w') as outfile:
+             open(distance_filename.replace('.csv', '.clustalo.csv'), 'w') as outfile:
             infile.readline()
             names = []
             lines = []
