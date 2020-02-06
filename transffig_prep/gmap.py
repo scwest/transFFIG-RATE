@@ -155,9 +155,9 @@ class Gmap():
                 line = line.strip().split(',')
                 new_gene = Gene(name = line[0],\
                                 chromosome = line[1],\
-                                start = line[2],\
-                                end = line[3],\
-                                strand = line[4])
+                                start = int(line[2]),\
+                                end = int(line[3]),\
+                                strand = int(line[4]))
                 self.genes[new_gene.name] = deepcopy(new_gene)
                 self.genes[new_gene.name].trans = collections.defaultdict(str)
             sys.stdout.write('\n')

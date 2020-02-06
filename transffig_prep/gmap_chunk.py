@@ -52,8 +52,8 @@ class Gmap_chunk():
                     hit = self.Hit()
                     hit.name = fid
                     hit.chromosome = chromosome
-                    hit.start = start
-                    hit.end = end
+                    hit.start = int(start)
+                    hit.end = int(end)
                     hit.strand = strand
                     self.hits.append(hit)
         return
