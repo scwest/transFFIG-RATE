@@ -308,8 +308,8 @@ class Gmap():
         output_filename = '{}gene_fastas/{}.fa'.format(storage_prefix, gene.name)
         
         transcripts_to_write = list(gene.trans.keys())
-        if len(transcripts_to_write) > 200:
-            transcripts_to_write = random.choice(transcripts_to_write, 200, replace=False)
+        if len(transcripts_to_write) > 80:
+            transcripts_to_write = random.choice(transcripts_to_write, 80, replace=False)
         
         with open(output_filename, 'w') as outfile:
             for tran in transcripts_to_write:
