@@ -14,6 +14,7 @@ import collections
 import sys
 import subprocess
 from copy import deepcopy
+from numpy import random
 
 from transffig_prep import Gene
 from transffig_prep import Gmap_chunk
@@ -306,10 +307,14 @@ class Gmap():
     def write_gene_fa(self, storage_prefix, gene):
         output_filename = '{}gene_fastas/{}.fa'.format(storage_prefix, gene.name)
         
+        transcripts_to_write = list(gene.trans.keys())
+        if len(transcripts_to_write) > 200:
+            transcripts_to_write = random.choice(transcripts_to_write, 200, replace=False)
+        
         with open(output_filename, 'w') as outfile:
-            for tran, seq in gene.trans.items():
+            for tran in transcripts_to_write:
                 outfile.write('>{} gene:{}\n'.format(tran, gene.name))
-                outfile.write('{}\n'.format(seq))
+                outfile.write('{}\n'.format(gene.trans[tran]))
         
         return output_filename
     
