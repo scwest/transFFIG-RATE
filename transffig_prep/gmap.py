@@ -43,6 +43,8 @@ class Gmap():
         ### If there is no gene that overlaps, we'll create a new gene
         ### create a new gene at this location
         if len(overlapped_gene_names) == 0:
+            pass
+            '''IGNORING TRANSCRIPTS NOT ASSIGNED TO A KNOWN GENE LOCATION
             # produce a new gene
             gene_name = 'arbitrary_{}'.format(self.current_gene_number)
             self.current_gene_number += 1
@@ -55,6 +57,7 @@ class Gmap():
                         end = hit.end,\
                         trans = t)
             self.genes[gene.name] = gene
+            '''
         
         ### If we found 1 gene that the transcript overlaps;
         ### add to an existing gene
@@ -75,7 +78,8 @@ class Gmap():
                 self.genes[gene_name].start = min([self.genes[gene_name].start, hit.start])
                 self.genes[gene_name].end = max([self.genes[gene_name].end, hit.end])
                 self.genes[gene_name].trans[hit.name] = self.tran2sequence[hit.name]
-                
+            
+            ''' IGNORING TRANSCRIPTS NOT ASSIGNED TO A KNOWN GENE LOCATION
             overlapped_gene_names = [x for x in overlapped_gene_names if 'arbitrary' in x]
             
             if len(overlapped_gene_names) == 1:
@@ -107,6 +111,7 @@ class Gmap():
                 
                 for gene_name in overlapped_gene_names:
                     del self.genes[gene_name]
+            '''
         return
         
     def check(self, storage_prefix):
