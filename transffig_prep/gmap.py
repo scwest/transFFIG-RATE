@@ -68,29 +68,47 @@ class Gmap():
         ### These are either genes that are on the same genomic location
         ### or they are the same gene. Either way, add them together.
         else:
-            gene = Gene()
-            gene.start = min([self.genes[x].start for x in overlapped_gene_names]+[hit.start])
-            gene.end = max([self.genes[x].end for x in overlapped_gene_names]+[hit.end])
-            gene.chromosome = hit.chromosome # they're all the same; only [0],[1] are guaranteed
-            gene.strand = hit.strand
-            
-            gene_names = [self.genes[x].name for x in overlapped_gene_names]
+            # for now, transcripts that overlap with reference genes will be represented
+            #          and those that do not overlap with reference genes at all
             keeper_gene_names = [x for x in gene_names if 'arbitrary' not in x]
-            if keeper_gene_names:
-                gene.name = '-'.join(keeper_gene_names)
+            for gene_name in keeper_gene_names:
+                self.genes[gene_name].start = min([self.genes[gene_name].start, hit.start])
+                self.genes[gene_name].end = max([self.genes[gene_name].end, hit.end])
+                self.genes[gene_name].trans[hit.name] = self.tran2sequence[hit.name]
+                
+            overlapped_gene_names = [x for x in overlapped_gene_names if 'arbitrary' in x]
+            
+            if not overlapped_gene_names:
+                continue
+            elif len(overlapped_gene_names == 1):
+                gene_name = overlapped_gene_names.pop()
+                self.genes[gene_name].start = min([self.genes[gene_name].start, hit.start])
+                self.genes[gene_name].end = max([self.genes[gene_name].end, hit.end])
+                self.genes[gene_name].trans[hit.name] = self.tran2sequence[hit.name]
             else:
-                gene.name = 'arbitrary_{}'.format(self.current_gene_number)
-                self.current_gene_number += 1
-            
-            for g in [self.genes[x] for x in overlapped_gene_names]:
-                for t, seq in g.trans.items():
-                    gene.trans[t] = seq
-            gene.trans[hit.name] = self.tran2sequence[hit.name]
-            
-            self.genes[gene.name] = gene
-            
-            for gene_name in overlapped_gene_names:
-                del self.genes[gene_name]
+                gene = Gene()
+                gene.start = min([self.genes[x].start for x in overlapped_gene_names]+[hit.start])
+                gene.end = max([self.genes[x].end for x in overlapped_gene_names]+[hit.end])
+                gene.chromosome = hit.chromosome # they're all the same; only [0],[1] are guaranteed
+                gene.strand = hit.strand
+                
+                gene_names = [self.genes[x].name for x in overlapped_gene_names]
+                keeper_gene_names = [x for x in gene_names if 'arbitrary' not in x]
+                if keeper_gene_names:
+                    gene.name = '-'.join(keeper_gene_names)
+                else:
+                    gene.name = 'arbitrary_{}'.format(self.current_gene_number)
+                    self.current_gene_number += 1
+                
+                for g in [self.genes[x] for x in overlapped_gene_names]:
+                    for t, seq in g.trans.items():
+                        gene.trans[t] = seq
+                gene.trans[hit.name] = self.tran2sequence[hit.name]
+                
+                self.genes[gene.name] = gene
+                
+                for gene_name in overlapped_gene_names:
+                    del self.genes[gene_name]
         return
         
     def check(self, storage_prefix):
