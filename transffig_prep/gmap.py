@@ -78,12 +78,12 @@ class Gmap():
                 
             overlapped_gene_names = [x for x in overlapped_gene_names if 'arbitrary' in x]
             
-            if len(overlapped_gene_names == 1):
+            if len(overlapped_gene_names) == 1:
                 gene_name = overlapped_gene_names.pop()
                 self.genes[gene_name].start = min([self.genes[gene_name].start, hit.start])
                 self.genes[gene_name].end = max([self.genes[gene_name].end, hit.end])
                 self.genes[gene_name].trans[hit.name] = self.tran2sequence[hit.name]
-            elif len(overlapped_gene_names > 1):
+            elif len(overlapped_gene_names) > 1:
                 gene = Gene()
                 gene.start = min([self.genes[x].start for x in overlapped_gene_names]+[hit.start])
                 gene.end = max([self.genes[x].end for x in overlapped_gene_names]+[hit.end])
