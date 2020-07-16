@@ -24,6 +24,7 @@ class Gmap():
         self.genes = {}
         self.current_gene_number = 1
         self.tran2sequence = {}
+        self.command_number = 1
                         
     def absorb_hit(self, hit):
         '''
@@ -64,6 +65,8 @@ class Gmap():
         ### add to an existing gene
         elif len(overlapped_gene_names) == 1:
             gene_name = overlapped_gene_names.pop()
+            if gene_name == '':
+                print('\n\nERROR: This gene name is blank for transcript, {}.'.format(hit.name))
             self.genes[gene_name].start = min([self.genes[gene_name].start, hit.start])
             self.genes[gene_name].end = max([self.genes[gene_name].end, hit.end])
             self.genes[gene_name].trans[hit.name] = self.tran2sequence[hit.name]
@@ -127,9 +130,12 @@ class Gmap():
     
     def command(self, gene, storage_prefix):
         commands = []
-        for call in ['transffig_muscle', 'transffig_mafft', 'transffig_tcoffee', 'transffig_clustalo']:
-            commands.append([call, gene.fa_filename, '{}distance_matrices/{}.csv'.format(storage_prefix, gene.name)])
-        
+        #tools = ['transffig_muscle', 'transffig_mafft', 'transffig_tcoffee', 'transffig_clustalo']
+        tools = ['transffig_muscle', 'transffig_mafft']
+        for call in tools:
+            commands.append([call, gene.fa_filename, '{}distance_matrices/{}.csv'.format(storage_prefix, gene.name),\
+                             str(self.command_number)])
+            self.command_number += 1
         return commands
     
     def get_fasta_chunks(self, input_filename):
@@ -211,7 +217,7 @@ class Gmap():
             
             
             print('\tParsing GMAP hits (chunks)')
-            self.parse_gmap(gmap_output_filename, fasta_input_filename, fasta_output_filename)
+            self.parse_gmap(gmap_output_filename)
             
             print('\tLength of self.genes:\t{}'.format(len(self.genes)))
                 
@@ -274,7 +280,7 @@ class Gmap():
             self.add_gene_and_transcript(gene_name, tran_name, seq, storage_prefix)
         return
     
-    def parse_gmap(self, gmap_output_filename, fasta_input_filename, fasta_output_filename):
+    def parse_gmap(self, gmap_output_filename):
         # get all the genes
         c = 1
         for chunk_of_text in self.get_gmap_chunks(gmap_output_filename):
@@ -318,20 +324,30 @@ class Gmap():
         
         return output_filename
     
-    def write_new_fasta(self, full_fasta_filename, fasta_input_filename):
-        # create transcript to gene dictionary
+    def write_new_fasta(self, full_fasta_filename, fasta_input_filename):      
         tran2gene = collections.defaultdict(set)
-        for gene_name in self.genes:
-            for tran in self.genes[gene_name].trans:
+        all_trans = {}
+        for gene_name in self.genes.keys():
+            for tran in self.genes[gene_name].trans.keys():
                 tran2gene[tran].add(gene_name)
+                all_trans[tran] = 1
         
-        # write the full fasta output
+        used_transcripts = set()
+        
         with open(full_fasta_filename, 'w') as outfile:
-            for chunk in self.get_fasta_chunks(fasta_input_filename):
-                seg = chunk.split('\n', 1)
-                transcript = seg[0].strip().split(' ')[0].replace('>', '')
-                sequence = seg[1]
+            for gene_name, gene in self.genes.items():
                 
-                outfile.write('>{} gene:{}\n'.format(transcript, ','.join(list(tran2gene[transcript]))))
-                outfile.write(sequence + '\n')
+                if len(gene.trans) == 0:
+                    continue
+                
+                for transcript_name, sequence in gene.trans.items():
+                    
+                    if not sequence:
+                        print('Why is there no sequence?')
+                        raise Exception
+                    
+                    if transcript_name not in used_transcripts:
+                        outfile.write('>{} gene:{}\n'.format(transcript_name, ','.join(list(tran2gene[transcript_name]))))
+                        outfile.write(sequence)
+                        used_transcripts.add(transcript_name)
         return

@@ -16,13 +16,49 @@ class Reliability():
         pass
     
     def calculate(self, gene, clusters):
-        vars = [np.var(x.expression) for x in gene.transcripts]
-        mean_rec_var = np.mean([1/x for x in vars])
-        rec_sum_var = 1/sum(vars)
+        vars = {}
+        for transcript in gene.transcripts:
+            vars[transcript.name] = np.var(transcript.expression)
+            
+        sum_var = sum(vars.values())
+        if sum_var == 0:
+            return 1
+        
+        mrv = []
+        perfects = 0
+        for x in vars.values():
+            if x == 0:
+                perfects += 1
+            else:
+                mrv.append(1/x)
+        if perfects:
+            mrv += [np.max(mrv)]*perfects
+        mean_rec_var = np.mean(mrv)
+        
+        rec_sum_var = 1/sum_var
+        
         per_cluster = 0
-        max_cnum = max(clusters)
-        for i in range(1, max_cnum+1):
-            per_cluster += 1/sum([vars[x] for x in range(len(clusters)) if clusters[x] == i])
-        per_cluster = per_cluster / max_cnum
+        pcs = []
+        perfects = 0
+        for cluster in clusters:
+            a = sum([vars[transcript_name] for transcript_name in cluster])
+            if a == 0:
+                perfects += 1
+            else:
+                pcs.append(1/a)
+        if perfects:
+            pcs += [np.max(pcs)]*perfects
+        per_cluster = np.mean(pcs)
+        
+        if mean_rec_var < rec_sum_var:
+            if mean_rec_var - rec_sum_var < 10**-10:
+                return mean_rec_var
+            else:
+                print('Why is the max less than the min!!!:???!?')
+                print(list(vars.values()))
+                print(mean_rec_var)
+                print(rec_sum_var)
+                raise Exception
+        
         
         return (mean_rec_var - per_cluster) / (mean_rec_var - rec_sum_var)

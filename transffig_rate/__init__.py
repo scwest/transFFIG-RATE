@@ -4,6 +4,7 @@ from transffig_rate.transcript import Transcript
 from transffig_rate.gene import Gene
 
 # Function Classes (in order)
+from transffig_rate.verbose import Verbose
 from transffig_rate.storage import Storage
 from transffig_rate.distance import Distance
 from transffig_rate.clustering import Clustering
