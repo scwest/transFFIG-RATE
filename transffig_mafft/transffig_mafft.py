@@ -3,13 +3,12 @@ Sean West
 31 January 2020
 
 Simple code to do a single MSA run on a single gene.
-'''
 
-'''
-Sean West 
-31 January 2020
-
-Simple code to do a single MSA run on a single gene.
+For information on MAFFT, see:
+    Katoh, K., & Standley, D. M. (2013). MAFFT multiple 
+    sequence alignment software version 7: improvements 
+    in performance and usability. Molecular biology and 
+    evolution, 30(4), 772-780.
 '''
 
 import sys 
@@ -25,8 +24,9 @@ class Transffig_mafft():
         temp_fasta_filename = 'mafft_fasta_temp{}.fa'.format(unique_number)
         temp_tree_filename = 'mafft_temp_tree{}.txt'.format(unique_number)
         
-        # preprocess fasta so Phylo doesn't mess up later 
-        ## (remove all but the transcript name)
+        # preprocess FASTA so Phylo doesn't mess up later 
+        # Phylo can not handle a FASTA title with more than one quantity
+        # (remove all but the transcript name)
         with open(fasta_filename, 'r') as infile, open(temp_fasta_filename, 'w') as outfile:
             for line in infile:
                 if line[0] == '>':
@@ -77,6 +77,14 @@ class Transffig_mafft():
         return
 
 def smain():
+    '''
+    This section is so that the transffig_mafft command can be run directly,
+    without invoking transffig_rate or transffig_prep.
+    
+    This is also the reason that transffig_mafft is in its own package.
+    This is useful when errors are produced for individual MSA jobs during
+    transffig_prep.
+    '''
     stick = Transffig_mafft()
     try:
         stick.main()

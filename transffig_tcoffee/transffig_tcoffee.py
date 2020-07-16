@@ -3,6 +3,14 @@ Sean West
 31 January 2020
 
 Simple code to do a single MSA run on a single gene.
+
+For more information on T-Coffee, see:
+    Di Tommaso, P., Moretti, S., Xenarios, I., Orobitg, M., 
+    Montanyola, A., Chang, J. M., ... & Notredame, C. (2011). 
+    T-Coffee: a web server for the multiple sequence alignment 
+    of protein and RNA sequences using structural information 
+    and homology extension. Nucleic acids research, 39(suppl_2), 
+    W13-W17.
 '''
 
 import sys 
@@ -19,8 +27,9 @@ class Transffig_tcoffee():
         temp_fasta_filename = 'tcoffee_fasta_temp{}.fa'.format(unique_number)
         temp_tree_filename = 'tcoffee_temp_tree{}.txt'.format(unique_number)
         
-        # preprocess fasta so Phylo doesn't mess up later 
-        ## (remove all but the transcript name)
+        # preprocess FASTA so Phylo doesn't mess up later 
+        # Phylo can not handle a FASTA title with more than one quantity
+        # (remove all but the transcript name)
         with open(fasta_filename, 'r') as infile, open(temp_fasta_filename, 'w') as outfile:
             for line in infile:
                 if line[0] == '>':
@@ -62,6 +71,14 @@ class Transffig_tcoffee():
         return
     
 def smain():
+    '''
+    This section is so that the transffig_tcoffee command can be run directly,
+    without invoking transffig_rate or transffig_prep.
+    
+    This is also the reason that transffig_tcoffee is in its own package.
+    This is useful when errors are produced for individual MSA jobs during
+    transffig_prep.
+    '''
     stick = Transffig_tcoffee()
     try:
         stick.main()

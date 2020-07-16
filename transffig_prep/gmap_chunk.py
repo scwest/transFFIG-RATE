@@ -1,6 +1,11 @@
 '''
 Sean West
 5 February 2020
+
+GMAP output is separated into a long text list of queries and
+their associated hits. Each of these chunks corresponds to
+a sequence query using in GMAP. This module parses out this text
+into meaningful values, mapping transcripts to genomic locations.
 '''
 
 class Gmap_chunk():
